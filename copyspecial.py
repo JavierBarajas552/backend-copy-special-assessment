@@ -21,19 +21,22 @@ def get_special_paths(dirname):
     """Given a dirname, returns a list of all its special files."""
     results = []
     for filenames in os.listdir(dirname):
-        # print(filenames)
         if re.search(r'__\w+__', filenames):
             results.append(os.path.abspath(filenames))
     return results
 
 
 def copy_to(path_list, dest_dir):
+    """"Given a list of files and a destination dir will copy all files to dir"""
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir)
     for paths in path_list:
         shutil.copy(paths, dest_dir)
     return
 
 
 def zip_to(path_list, dest_zip):
+    """Given a list of files and a destination to make a zip will copy files and zip them"""
     print("Command I'm going to do:")
     command = 'zip -j ' + dest_zip + ' ' + ' '.join(path_list)
     print(command)
