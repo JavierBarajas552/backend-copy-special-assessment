@@ -7,7 +7,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 
 # give credits
-__author__ = "???"
+__author__ = "Javier Barajas"
 
 import re
 import os
@@ -19,17 +19,28 @@ import argparse
 
 def get_special_paths(dirname):
     """Given a dirname, returns a list of all its special files."""
-    # your code here
-    return
+    results = []
+    for filenames in os.listdir(dirname):
+        if re.search(r'__\w+__', filenames):
+            results.append(os.path.abspath(os.path.join(dirname, filenames)))
+    return results
 
 
 def copy_to(path_list, dest_dir):
-    # your code here
+    """"Given a list of files and a destination dir will copy all files to dir"""
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir)
+    for paths in path_list:
+        shutil.copy(paths, dest_dir)
     return
 
 
 def zip_to(path_list, dest_zip):
-    # your code here
+    """Given a list of files and a destination to make a zip will copy files and zip them"""
+    print("Command I'm going to do:")
+    command = 'zip -j ' + dest_zip + ' ' + ' '.join(path_list)
+    print(command)
+    subprocess.run(['zip', '-j', dest_zip, *path_list])
     return
 
 
@@ -39,9 +50,10 @@ def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('--todir', help='dest dir for special files')
     parser.add_argument('--tozip', help='dest zipfile for special files')
+    parser.add_argument('from_dir', help='source dir for special files')
     # TODO: add one more argument definition to parse the 'from_dir' argument
     ns = parser.parse_args(args)
-
+    # print(os.path.abspath(ns[0]))
     # TODO: you must write your own code to get the command line args.
     # Read the docs and examples for the argparse module about how to do this.
 
@@ -51,6 +63,15 @@ def main(args):
     # exit(1).
 
     # Your code here: Invoke (call) your functions
+
+    path_list = get_special_paths(ns.from_dir)
+    if ns.todir != None:
+        copy_to(path_list, ns.todir)
+    elif ns.tozip != None:
+        zip_to(path_list, ns.tozip)
+    else:
+        for path in path_list:
+            print(path)
 
 
 if __name__ == "__main__":
