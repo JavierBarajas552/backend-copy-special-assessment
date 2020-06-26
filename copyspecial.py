@@ -22,7 +22,7 @@ def get_special_paths(dirname):
     results = []
     for filenames in os.listdir(dirname):
         if re.search(r'__\w+__', filenames):
-            results.append(os.path.abspath(filenames))
+            results.append(os.path.abspath(os.path.join(dirname, filenames)))
     return results
 
 
